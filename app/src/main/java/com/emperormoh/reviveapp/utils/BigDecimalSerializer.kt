@@ -1,4 +1,4 @@
-package com.wemabank.model.common
+package com.emperormoh.reviveapp.utils
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -13,6 +13,7 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import java.lang.reflect.Type
 import java.math.BigDecimal
+import kotlin.text.isNotEmpty
 
 object BigDecimalSerializer : JsonSerializer<BigDecimal>, JsonDeserializer<BigDecimal> {
     override fun serialize(
