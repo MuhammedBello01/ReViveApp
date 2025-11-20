@@ -1,6 +1,7 @@
 package com.emperormoh.reviveapp.data.di
 
 import com.emperormoh.reviveapp.data.local.AppDataStore
+import com.emperormoh.reviveapp.data.local.TokenManager
 import com.emperormoh.reviveapp.data.remote.ReviveApiService
 import com.emperormoh.reviveapp.utils.AuthInterceptor
 import com.emperormoh.reviveapp.utils.JsonUtils
@@ -23,8 +24,8 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideAuthInterceptor(dataStore: AppDataStore): AuthInterceptor =
-        AuthInterceptor(dataStore)
+    fun provideAuthInterceptor(tokenManager: TokenManager): AuthInterceptor =
+        AuthInterceptor(tokenManager)
 
     @Provides
     @Singleton
@@ -51,6 +52,20 @@ object NetworkModule {
             .build()
     }
 
+//    @Provides
+//    @Singleton
+//    fun provideReviveRetrofit(@AuthenticatedClient okHttpClient: OkHttpClient): Retrofit =
+//        Retrofit.Builder()
+//            .baseUrl("https://api.example.com/")
+//            .client(okHttpClient)
+//            .addConverterFactory(GsonConverterFactory.create(JsonUtils.gson))
+//            .build()
+//
+//    @Provides
+//    @Singleton
+//    fun provideApi(@AuthenticatedClient okHttpClient: OkHttpClient): ReviveApiService =
+//        provideReviveRetrofit(okHttpClient = okHttpClient).create(ReviveApiService::class.java)
+
 
     @Provides
     @Singleton
@@ -63,6 +78,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideApi(retrofit: Retrofit): ReviveApiService =
+    fun provideReviveApi(retrofit: Retrofit): ReviveApiService =
         retrofit.create(ReviveApiService::class.java)
 }

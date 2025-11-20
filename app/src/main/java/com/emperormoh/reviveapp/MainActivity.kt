@@ -11,19 +11,27 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.emperormoh.reviveapp.presentation.dashboard.DashboardScreen
+import com.emperormoh.reviveapp.presentation.login.LoginScreen
+import com.emperormoh.reviveapp.presentation.onboarding.OnboardingScreen
+import com.emperormoh.reviveapp.presentation.sign_up.SignupScreen
 import com.emperormoh.reviveapp.ui.theme.ReViveAppTheme
+import com.emperormoh.reviveapp.utils.Routes
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             ReViveAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Scaffold(
+                    modifier = Modifier.fillMaxSize()) {
+                    AppNavHost()
                 }
             }
         }
@@ -31,17 +39,37 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun AppNavHost() {
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = Routes.Onboarding
+    ) {
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ReViveAppTheme {
-        Greeting("Android")
+        composable(Routes.Onboarding) {
+            OnboardingScreen(onContinue = {
+                navController.navigate(Routes.Login)
+            })
+        }
+
+
+        composable(Routes.Login) {
+            LoginScreen(
+                onLoginSuccess = { navController.navigate(Routes.Dashboard) },
+                onSignUp = { navController.navigate(Routes.Signup) }
+            )
+        }
+
+
+        composable(Routes.Signup) {
+            SignupScreen(onSignupSuccess = {
+                navController.navigate(Routes.Dashboard)
+            })
+        }
+
+
+        composable(Routes.Dashboard) {
+            DashboardScreen()
+        }
     }
 }
